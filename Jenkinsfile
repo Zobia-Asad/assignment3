@@ -10,7 +10,6 @@ pipeline {
 
         stage('Test') {
             agent {
-                // This docker image has Python & Chrome pre-installed
                 docker { 
                     image 'joyzoursky/python-chromedriver:3.9'
                     args '-u root'
@@ -18,14 +17,25 @@ pipeline {
             }
             steps {
                 sh 'pip install -r requirements.txt'
-                // Run tests and save results for Jenkins to display
                 sh 'pytest test_app.py --junitxml=test-results.xml'
+            }
+            
+            // --- MOVED INSIDE THE STAGE ---
+            post {
+                always {
+                    // Now it looks in the correct folder (@2)
+                    junit 'test-results.xml'
+                }
             }
         }
     }
+
     post {
         always {
-            junit 'test-results.xml'
+            // Email the collaborator (Assignment Requirement)
+            emailext body: "Job '${env.JOB_NAME}' - Build #${env.BUILD_NUMBER}\nStatus: ${currentBuild.currentResult}\nCheck console for details.",
+                     subject: "Jenkins Build ${currentBuild.currentResult}: ${env.JOB_NAME}",
+                     to: 'qasimalik@gmail.com' 
         }
     }
 }
