@@ -19,11 +19,8 @@ pipeline {
                 sh 'pip install -r requirements.txt'
                 sh 'pytest test_app.py --junitxml=test-results.xml'
             }
-            
-            // --- MOVED INSIDE THE STAGE ---
             post {
                 always {
-                    // Now it looks in the correct folder (@2)
                     junit 'test-results.xml'
                 }
             }
@@ -32,10 +29,10 @@ pipeline {
 
     post {
         always {
-            // Email the collaborator (Assignment Requirement)
+            // Updated to send to TWO emails (comma-separated)
             emailext body: "Job '${env.JOB_NAME}' - Build #${env.BUILD_NUMBER}\nStatus: ${currentBuild.currentResult}\nCheck console for details.",
                      subject: "Jenkins Build ${currentBuild.currentResult}: ${env.JOB_NAME}",
-                     to: 'qasimalik@gmail.com' 
+                     to: 'qasimalik@gmail.com, ssc.summiya.201201@gmail.com' 
         }
     }
 }
