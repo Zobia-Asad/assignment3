@@ -32,7 +32,7 @@ pipeline {
             // Updated to send to TWO emails (comma-separated)
             emailext body: "Job '${env.JOB_NAME}' - Build #${env.BUILD_NUMBER}\nStatus: ${currentBuild.currentResult}\nCheck console for details.",
                      subject: "Jenkins Build ${currentBuild.currentResult}: ${env.JOB_NAME}",
-                     to: 'qasimalik@gmail.com, ssc.summiya.201201@gmail.com' 
+                     to: 'qasimalik@gmail.com, zaasad05@gmail.com' 
         }
     }
 }
